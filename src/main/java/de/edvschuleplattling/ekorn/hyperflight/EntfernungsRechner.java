@@ -43,6 +43,6 @@ public class EntfernungsRechner {
     public static int getDistance(String city1, String city2) {
         int startNr = getCityNr(city1);
         int endNr = getCityNr(city2);
-
+        return DISTANCES[startNr][endNr];
     }
 }

@@ -31,27 +31,21 @@ public class HelloController {
         if (Objects.equals(start, end)) {
             lblOutput.setText("Die Bahnhöfe sind gleich!");
         }
-        else if (start != "" && end != "") {
-            
+        else {
             if (!startCheck && !endCheck) {
                 lblOutput.setText("Die Bahnhöfe existieren nicht!");
-            }
-            else if (!startCheck) {
+            } else if (!startCheck) {
                 lblOutput.setText("Startbahnhof existiert nicht!");
-            }
-            else if (!endCheck) {
+            } else if (!endCheck) {
                 lblOutput.setText("Zielbahnhof existiert nicht!");
-            }
-            else {
+            } else {
                 calcCheck = true;
             }
         }
-        else {
-            lblOutput.setText("");
-        }
 
         if (calcCheck) {
-            lblOutput.setText("Von "+start+" nach "+end);
+            int distance = EntfernungsRechner.getDistance(start, end);
+            lblOutput.setText(Integer.toString(distance) + "km");
         }
     }
 }
