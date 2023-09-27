@@ -6,7 +6,7 @@ import javafx.scene.control.*;
 
 import java.util.Objects;
 
-public class HelloController {
+public class HyperFlightController {
 
     @FXML
     private Button btnCalculate;
@@ -30,8 +30,8 @@ public class HelloController {
     public void onCalculateClick(ActionEvent actionEvent) {
         String start = cbStartStation.getValue();
         String end = cbEndStation.getValue();
-        boolean startCheck = EntfernungsRechner.cityExist(start);
-        boolean endCheck = EntfernungsRechner.cityExist(end);
+        // boolean startCheck = EntfernungsRechner.cityExist(start);
+        // boolean endCheck = EntfernungsRechner.cityExist(end);
         boolean calcCheck = false;
 
         // Fehlermeldungen
