@@ -1,20 +1,61 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.Cursor?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.paint.LinearGradient?>
+<?import javafx.scene.paint.Stop?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="300.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.edvschuleplattling.ekorn.hyperflight.HelloController">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="550.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="de.edvschuleplattling.ekorn.hyperflight.HelloController">
    <children>
-      <TextField fx:id="txtStartStation" alignment="CENTER" layoutX="50.0" layoutY="27.0" prefHeight="25.0" prefWidth="200.0" promptText="Startbahnhof" />
-      <TextField fx:id="txtEndStation" alignment="CENTER" layoutX="50.0" layoutY="64.0" prefHeight="25.0" prefWidth="200.0" promptText="Zielbahnhof" />
-      <Button fx:id="btnCalculate" layoutX="105.0" layoutY="148.0" mnemonicParsing="false" onAction="#onCalculateClick" prefHeight="25.0" prefWidth="90.0" text="Berechnen">
+      <Label fx:id="lblOutput" alignment="TOP_CENTER" layoutX="125.0" layoutY="193.0" prefHeight="30.0" prefWidth="350.0">
+         <font>
+            <Font size="14.0" />
+         </font></Label>
+      <Label layoutX="14.0" layoutY="7.0" prefHeight="60.0" prefWidth="250.0" text="Hyperflight" underline="true">
+         <font>
+            <Font name="Bauhaus 93" size="42.0" />
+         </font>
+         <textFill>
+            <LinearGradient endX="0.6255924170616114" endY="0.8009478672985781" startX="0.3127962085308057" startY="0.16113744075829384">
+               <stops>
+                  <Stop>
+                     <color>
+                        <Color red="0.1535087674856186" green="0.7163742780685425" blue="0.9210526347160339" />
+                     </color>
+                  </Stop>
+                  <Stop offset="1.0">
+                     <color>
+                        <Color red="0.8178301453590393" green="0.26133039593696594" blue="0.8684210777282715" />
+                     </color>
+                  </Stop>
+               </stops>
+            </LinearGradient>
+         </textFill>
+      </Label>
+      <Button fx:id="btnCalculate" layoutX="255.0" layoutY="136.0" mnemonicParsing="false" onAction="#onCalculateClick" prefHeight="30.0" prefWidth="90.0" text="Berechnen">
          <font>
             <Font size="14.0" />
          </font>
+         <cursor>
+            <Cursor fx:constant="DEFAULT" />
+         </cursor>
       </Button>
-      <Label fx:id="lblOutput" alignment="CENTER" layoutX="25.0" layoutY="106.0" prefHeight="25.0" prefWidth="250.0" />
+      <Button fx:id="btnClearHistory" layoutX="407.0" layoutY="509.0" mnemonicParsing="false" onAction="#onClearClick" prefHeight="27.0" prefWidth="169.0" text="Alte Abfragen löschen">
+         <font>
+            <Font size="13.0" />
+         </font>
+      </Button>
+      <Line endX="493.0" layoutX="107.0" layoutY="82.0" startX="-107.0" />
+      <Line endX="400.0" layoutX="200.0" layoutY="257.0" startX="-200.0" />
+      <ListView fx:id="lstHistory" layoutX="25.0" layoutY="275.0" prefHeight="225.0" prefWidth="550.0" />
+      <ChoiceBox fx:id="cbStartStation" layoutX="25.0" layoutY="99.0" prefHeight="30.0" prefWidth="200.0" />
+      <ChoiceBox fx:id="cbEndStation" layoutX="375.0" layoutY="99.0" prefHeight="30.0" prefWidth="200.0" />
    </children>
 </AnchorPane>
