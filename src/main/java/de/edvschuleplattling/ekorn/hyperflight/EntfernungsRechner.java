@@ -3,6 +3,11 @@ package de.edvschuleplattling.ekorn.hyperflight;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.ArrayList;
+import java.util.Scanner;
 
 public class EntfernungsRechner {
 
@@ -41,13 +46,34 @@ public class EntfernungsRechner {
         return Arrays.stream(CITIES).toList().indexOf(city);
     }
 
-    public static String[] getCities() {
-        return CITIES;
-    }
-
     public static int getDistance(String city1, String city2) {
         int startNr = getCityNr(city1);
         int endNr = getCityNr(city2);
         return DISTANCES[startNr][endNr];
+    }
+
+    public static int[][] getDistances() {
+        int[][] distances = new int[0][0];
+        try {
+            FileReader fr = new FileReader("stationen.csv");
+            Scanner sc = new Scanner(fr);
+
+            sc.nextLine();
+            while (sc.hasNextLine()) {
+                String zeile = sc.nextLine();
+                String[] spalten = zeile.split(";");
+                for (int i = 0; i < spalten.length; i++) {
+
+                }
+            }
+        }
+        catch (Throwable e) {
+            throw new RuntimeException("Fehler beim Dateizugriff", e);
+        }
+        return distances;
+    }
+
+    public static String[] getCities() {
+        return CITIES;
     }
 }
