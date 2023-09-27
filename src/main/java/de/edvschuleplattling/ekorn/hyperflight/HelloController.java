@@ -28,6 +28,7 @@ public class HelloController {
         boolean calcCheck = false;
 
         // Geht alle möglichen Fehlerprüfungen durch
+        // Falls nichts eingegeben wurde, oder beide Bahnhöfe gleich sind
         if (Objects.equals(start, "") && Objects.equals(end, "")) {
             // System.out.println("Both Empty");
             lblOutput.setText("Bitte Bahnhöfe eingeben!");
@@ -41,6 +42,7 @@ public class HelloController {
             // System.out.println("Identical");
             lblOutput.setText("Die Bahnhöfe sind gleich!");
         } else {
+            // Falls eingegebene Bahnhöfe nicht existieren
             if (!startCheck && !endCheck) {
                 // System.out.println("Both Not Exist");
                 lblOutput.setText("Die Bahnhöfe existieren nicht!");
@@ -65,7 +67,7 @@ public class HelloController {
                 lblOutput.setText("Es gibt keine Verbindung!");
             } else {
                 // System.out.println("Success");
-                lblOutput.setText("Von " + start + " nach " + end + ": " + Integer.toString(distance) + "km");
+                lblOutput.setText("Von " + start + " nach " + end + ": " + distance + "km");
             }
         }
     }
