@@ -1,5 +1,6 @@
 package de.edvschuleplattling.ekorn.hyperflight;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
@@ -38,6 +39,10 @@ public class EntfernungsRechner {
 
     public static int getCityNr(String city) {
         return Arrays.stream(CITIES).toList().indexOf(city);
+    }
+
+    public static String[] getCities() {
+        return CITIES;
     }
 
     public static int getDistance(String city1, String city2) {
