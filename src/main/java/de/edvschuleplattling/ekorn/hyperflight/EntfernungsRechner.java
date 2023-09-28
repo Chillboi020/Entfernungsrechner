@@ -1,79 +1,74 @@
 package de.edvschuleplattling.ekorn.hyperflight;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class EntfernungsRechner {
 
-    // Entfernungen und Bahnhöfe hardcodiert
-    public static final String[] CITIES = new String[] {
-            "Berlin", "Dresden", "Erfurt", "Essen", "Frankfurt",
-            "Hamburg", "Hannover", "München", "Plattling", "Stuttgart"
-    };
-    public static final int[][] DISTANCES = new int[][] {
-            {0, 178, 326, 0, 0, 320, 0, 0, 0, 0}, // Berlin
-            {178, 0, 0, 0, 0, 0, 0, 0, 0, 0}, // Dresden
-            {326, 0, 0, 312, 263, 382, 0, 329, 0, 344}, // Erfurt
-            {0, 0, 312, 0, 0, 0, 194, 0, 0, 0}, // Essen
-            {0, 0, 263, 0, 0, 0, 0, 0, 0, 179}, // Frankfurt
-            {320, 0, 382, 0, 0, 0, 0, 0, 0, 0}, // Hamburg
-            {0, 0, 0, 194, 0, 0, 0, 0, 0, 0}, // Hannover
-            {0, 0, 329, 0, 0, 0, 0, 0, 130, 0}, // München
-            {0, 0, 0, 0, 0, 0, 0, 130, 0, 0}, // Plattling
-            {0, 0, 344, 0, 179, 0, 0, 0, 0, 0} // Stuttgart
-    };
+    public String[] cities;
+    public int[][] distances;
+    private String path;
 
-    // Prüft, ob eingegebene Bahnhöfe existieren
-    public static boolean cityExist(String city) {
+    public EntfernungsRechner(String path) {
+        this.path = path;
+    }
+
+    // Holt den Index von der Stadt
+    public int getCityNr(String city) {
+        return Arrays.stream(cities).toList().indexOf(city);
+    }
+
+    // Holt die Entfernung zwischen zwei Stationen
+    public int getDistance(String city1, String city2) {
+        int startNr = getCityNr(city1);
+        int endNr = getCityNr(city2);
+        return distances[startNr][endNr];
+    }
+
+    // Ladet die Daten aus einer csv Datei
+    public void loadData() {
+        try {
+            FileReader fr = new FileReader(path);
+            Scanner sc = new Scanner(fr);
+            List<String> list = new ArrayList<>(Arrays.stream(sc.nextLine().split(";")).toList());
+            list.remove(0);
+            cities = new String[list.size()];
+            for (int i = 0; i < cities.length; i++) {
+                cities[i] = list.get(i);
+                // System.out.print(cities[i] + ", ");
+            }
+            // System.out.println(" ");
+
+            distances = new int[cities.length][cities.length];
+
+            for (int z = 0; sc.hasNextLine(); z++) {
+                String zeile = sc.nextLine();
+                String[] spalten = zeile.split(";");
+                for (int s = 1; s < spalten.length; s++) {
+                    distances[z][s - 1] = Integer.parseInt(spalten[s]);
+                    // System.out.print(distances[z][s - 1]+ ",");
+                }
+                // System.out.println(" ");
+            }
+        }
+        catch (Throwable e) {
+            throw new RuntimeException("Fehler beim Dateizugriff", e);
+        }
+    }
+
+    // Prüft, ob ausgewählte Bahnhöfe existieren (wird aber derzeit nicht verwendet!)
+    public boolean cityExist(String city) {
         boolean check = false;
 
-        for (String s : CITIES) {
+        for (String s : cities) {
             if (Objects.equals(s, city)) {
                 check = true;
                 break;
             }
         }
         return check;
-    }
-
-    public static int getCityNr(String city) {
-        return Arrays.stream(CITIES).toList().indexOf(city);
-    }
-
-    public static int getDistance(String city1, String city2) {
-        int startNr = getCityNr(city1);
-        int endNr = getCityNr(city2);
-        return DISTANCES[startNr][endNr];
-    }
-
-    public static int[][] getDistances() {
-        int[][] distances = new int[0][0];
-        try {
-            FileReader fr = new FileReader("stationen.csv");
-            Scanner sc = new Scanner(fr);
-
-            sc.nextLine();
-            while (sc.hasNextLine()) {
-                String zeile = sc.nextLine();
-                String[] spalten = zeile.split(";");
-                for (int i = 0; i < spalten.length; i++) {
-
-                }
-            }
-        }
-        catch (Throwable e) {
-            throw new RuntimeException("Fehler beim Dateizugriff", e);
-        }
-        return distances;
-    }
-
-    public static String[] getCities() {
-        return CITIES;
     }
 }

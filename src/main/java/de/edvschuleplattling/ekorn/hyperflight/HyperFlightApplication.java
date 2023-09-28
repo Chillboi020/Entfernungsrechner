@@ -10,9 +10,9 @@ import java.io.IOException;
 public class HyperFlightApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(HyperFlightApplication.class.getResource("hello-view.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(HyperFlightApplication.class.getResource("hyperflight-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 600, 550);
-        stage.setTitle("Hyperflight");
+        stage.setTitle("Hyperflight Navigation");
         stage.setScene(scene);
         stage.show();
     }

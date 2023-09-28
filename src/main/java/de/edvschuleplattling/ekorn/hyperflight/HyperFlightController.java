@@ -2,11 +2,14 @@ package de.edvschuleplattling.ekorn.hyperflight;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
+import java.net.URL;
 import java.util.Objects;
+import java.util.ResourceBundle;
 
-public class HyperFlightController {
+public class HyperFlightController implements Initializable {
 
     @FXML
     private Button btnCalculate;
@@ -20,12 +23,21 @@ public class HyperFlightController {
     private ChoiceBox<String> cbStartStation;
     @FXML
     private ChoiceBox<String> cbEndStation;
+    @FXML
+    private Button btnRefresh;
+    @FXML
+    private Button btnClearSelected;
 
-    public void initialize() {
-        addArrayToChoiceBox(EntfernungsRechner.getCities(), cbStartStation);
-        addArrayToChoiceBox(EntfernungsRechner.getCities(), cbEndStation);
+    // Objekt Entfernungsrechner
+    private EntfernungsRechner er = new EntfernungsRechner("stationen.csv");
+
+    // Initialisierung beim Programmstart oder beim Refresh (Daten werden geholt und Choiceboxen werden befüllt)
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        refresh();
     }
 
+    // Die Berechnung der Entfernung
     @FXML
     public void onCalculateClick(ActionEvent actionEvent) {
         String start = cbStartStation.getValue();
@@ -36,21 +48,12 @@ public class HyperFlightController {
 
         // Fehlermeldungen
         // Falls eine Choicebox leer it oder wenn beide gleich sind
-        if (Objects.equals(start, null) && Objects.equals(end, null)) {
-            lblOutput.setText("Bitte Bahnhöfe auswählen!");
-        } else if (Objects.equals(start, null)) {
-            lblOutput.setText("Bitte Startbahnhof auswählen!");
-        } else if (Objects.equals(end, null)) {
-            lblOutput.setText("Bitte Endbahnhof auswählen!");
-        } else if (Objects.equals(start, end)) {
+        if (Objects.equals(start, end)) {
             lblOutput.setText("Bahnhöfe sind gleich!");
         } else {
             calcCheck = true;
         }
-        /* else if (Objects.equals(start, end)) {
-            // System.out.println("Identical");
-            //lblOutput.setText("Die Bahnhöfe sind gleich!");
-        //} else {
+        /* } else {
             // // Falls eingegebene Bahnhöfe nicht existieren
             //if (!startCheck && !endCheck) {
                 // // System.out.println("Both Not Exist");
@@ -70,7 +73,7 @@ public class HyperFlightController {
 
         // Die Entfernungsberechnung
         if (calcCheck) {
-            int distance = EntfernungsRechner.getDistance(start, end);
+            int distance = er.getDistance(start, end);
             if (distance == 0) {
                 // System.out.println("No Connection");
                 lblOutput.setText("Es gibt keine Verbindung!");
@@ -82,12 +85,39 @@ public class HyperFlightController {
         }
     }
 
+    // Löscht die Historie
     @FXML
     public void onClearClick(ActionEvent actionEvent) {
         lstHistory.getItems().clear();
     }
 
-    public void addArrayToChoiceBox(String[] cities, ChoiceBox<String> cb) {
+    @FXML
+    public void onClearSelectedClick(ActionEvent actionEvent) {
+        int selectIndex = lstHistory.getSelectionModel().getSelectedIndex();
+        if (selectIndex >= 0) {
+            lstHistory.getItems().remove(selectIndex);
+        }
+    }
+
+    @FXML
+    public void onRefreshClick(ActionEvent actionEvent) {
+        refresh();
+    }
+
+    // Daten werden aktualisiert
+    private void refresh() {
+        er.loadData();
+        cbStartStation.getItems().clear();
+        addArrayToChoiceBox(er.cities, cbStartStation);
+        cbStartStation.getSelectionModel().select(0);
+
+        cbEndStation.getItems().clear();
+        addArrayToChoiceBox(er.cities, cbEndStation);
+        cbEndStation.getSelectionModel().select(0);
+    }
+
+    // fügt ein String Array in eine Choicebox ein
+    private void addArrayToChoiceBox(String[] cities, ChoiceBox<String> cb) {
         for (String city : cities) {
             cb.getItems().add(city);
         }
