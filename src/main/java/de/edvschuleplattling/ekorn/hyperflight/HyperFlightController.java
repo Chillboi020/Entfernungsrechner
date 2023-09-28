@@ -6,7 +6,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
 import java.net.URL;
-import java.util.Objects;
 import java.util.ResourceBundle;
 
 public class HyperFlightController implements Initializable {
@@ -28,17 +27,16 @@ public class HyperFlightController implements Initializable {
     @FXML
     private Button btnClearSelected;
 
-    // Objekt Entfernungsrechner
-    private EntfernungsRechner er = new EntfernungsRechner("stationen.csv");
+    // Object DistanceCalculator
+    private final DistanceCalculator er = new DistanceCalculator("stationen.csv");
 
-    // Initialisierung beim Programmstart oder beim Refresh (Daten werden geholt und Choiceboxen werden befüllt)
+    // Data gets loaded when booting the program
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         refresh();
-        er.calculateAll();
     }
 
-    // Die Berechnung der Entfernung
+    // Distance calculation button
     @FXML
     public void onCalculateClick(ActionEvent actionEvent) {
         String start = cbStartStation.getValue();
@@ -47,21 +45,21 @@ public class HyperFlightController implements Initializable {
         // Die Entfernungsberechnung
         int distance = er.getDistance(start, end);
         if (distance == 0) {
-            lblOutput.setText("Gleicher Bahnhof!");
-        } else if (distance == -1) {
-            lblOutput.setText("Keine Verbindung!");
+            lblOutput.setText("Same Trainstation!");
         } else {
             lblOutput.setText(start + " --> " + end + ": " + distance + "km");
             lstHistory.getItems().add(lblOutput.getText());
         }
     }
 
-    // Löscht die Historie
+    // Deletes the history
     @FXML
     public void onClearClick(ActionEvent actionEvent) {
+        lblOutput.setText("");
         lstHistory.getItems().clear();
     }
 
+    // Deletes the selected history entry
     @FXML
     public void onClearSelectedClick(ActionEvent actionEvent) {
         int selectIndex = lstHistory.getSelectionModel().getSelectedIndex();
@@ -70,25 +68,29 @@ public class HyperFlightController implements Initializable {
         }
     }
 
+    // Refreshes all data
     @FXML
     public void onRefreshClick(ActionEvent actionEvent) {
+        lblOutput.setText("");
         refresh();
     }
 
-    // Daten werden aktualisiert
     private void refresh() {
         er.loadData();
+        er.calculateShortestPaths();
+
         cbStartStation.getItems().clear();
-        addArrayToChoiceBox(er.cities, cbStartStation);
+        addArrayToChoiceBox(er.getCities(), cbStartStation);
         cbStartStation.getSelectionModel().select(0);
 
         cbEndStation.getItems().clear();
-        addArrayToChoiceBox(er.cities, cbEndStation);
+        addArrayToChoiceBox(er.getCities(), cbEndStation);
         cbEndStation.getSelectionModel().select(0);
     }
 
-    // fügt ein String Array in eine Choicebox ein
+    // Fills the choiceboxes with the cities
     private void addArrayToChoiceBox(String[] cities, ChoiceBox<String> cb) {
+        if (cities == null) return;
         for (String city : cities) {
             cb.getItems().add(city);
         }

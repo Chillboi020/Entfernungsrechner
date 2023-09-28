@@ -1,36 +1,41 @@
 package de.edvschuleplattling.ekorn.hyperflight;
 
 import java.util.*;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 
-public class EntfernungsRechner {
+public class DistanceCalculator {
 
-    public String[] cities;
-    public int[][] distances;
+    // Properties
+    private String[] cities;
+    private int[][] distances;
     private int[][] predecessor;
     private int[][] shortestDistances;
     private String path;
 
-    public EntfernungsRechner(String path) {
+    // Constructor
+    public DistanceCalculator(String path) {
         this.path = path;
     }
 
-    // Holt den Index von der Stadt
+    // Gets the Index from the city
     public int getCityNr(String city) {
         return Arrays.stream(cities).toList().indexOf(city);
     }
 
-    // Holt die Entfernung zwischen zwei Stationen
+    // Gets the String Array with all cities
+    public String[] getCities() {
+        return cities;
+    }
+
+    // Gets the distance between two cities
     public int getDistance(String city1, String city2) {
         int startNr = getCityNr(city1);
         int endNr = getCityNr(city2);
         return distances[startNr][endNr];
     }
 
-    // Ladet die Daten aus einer csv Datei
+    // Loads the Data from the file given in the path
     public void loadData() {
         try {
             FileReader fr = new FileReader(path);
@@ -43,6 +48,8 @@ public class EntfernungsRechner {
             }
 
             distances = new int[cities.length][cities.length];
+            predecessor = new int[cities.length][cities.length];
+            shortestDistances = new int[cities.length][cities.length];
 
             for (int z = 0; sc.hasNextLine(); z++) {
                 String zeile = sc.nextLine();
@@ -53,12 +60,12 @@ public class EntfernungsRechner {
             }
         }
         catch (Throwable e) {
-            throw new RuntimeException("Fehler beim Dateizugriff", e);
+            throw new RuntimeException("Error while getting data", e);
         }
     }
 
-    // Prüft, ob ausgewählte Bahnhöfe existieren (wird aber derzeit nicht verwendet!)
-    public boolean cityExist(String city) {
+    // Checks, if the chosen stations exist (currently not used)
+    /*public boolean cityExist(String city) {
         boolean check = false;
 
         for (String s : cities) {
@@ -68,13 +75,15 @@ public class EntfernungsRechner {
             }
         }
         return check;
-    }
+    }*/
 
+    // The algorithm for the path calculating
     public void calculateShortestPaths() {
         if (distances == null) return;
 
         int i, j, k, v = distances.length;
 
+        // Predecessor gets filled with values or -1
         for (i = 0; i < v; i++) {
             for (j = 0; j < v; j++) {
                 if (distances[i][j] != Integer.MAX_VALUE && distances[i][j] != 0) {
@@ -85,6 +94,7 @@ public class EntfernungsRechner {
             }
         }
 
+        // Floyd-Warshall-Algorithm
         for (i = 0; i < v; i++) {
             for (j = 0; j < v; j++) {
                 if (distances[i][j] == -1) {
@@ -93,28 +103,31 @@ public class EntfernungsRechner {
                     shortestDistances[i][j] = distances[i][j];
                 }
             }
-        } // TODO
+        }
 
         for (k = 0; k < v; k++) {
             for (i = 0; i < v; i++) {
                 for (j = 0; j < v; j++) {
-                    if (distances[i][k] + distances[k][j] < distances[i][j]) {
-                        distances[i][j] = distances[i][k] + distances[k][j];
+                    if (shortestDistances[i][k] < Integer.MAX_VALUE && shortestDistances[k][j] < Integer.MAX_VALUE) {
+                        int possibleShortestPath = shortestDistances[i][k] + shortestDistances[k][j];
+                        if (possibleShortestPath < shortestDistances[i][j]) {
+                            shortestDistances[i][j] = possibleShortestPath;
+                            predecessor[i][j] = predecessor[k][j];
+                        }
                     }
                 }
             }
         }
-        System.out.println(Integer.MAX_VALUE);
-        System.out.println("Die Entfernungen");
+
+        // Matrix has to be updated
         for (i = 0; i < v; i++) {
             for (j = 0; j < v; j++) {
-                if (distances[i][j] == inf) {
-                    System.out.print("INF ");
+                if (shortestDistances[i][j] != Integer.MAX_VALUE) {
+                    distances[i][j] = shortestDistances[i][j];
                 } else {
-                    System.out.print(distances[i][j] + "   ");
+                    distances[i][j] = -1;
                 }
             }
-            System.out.println();
         }
     }
 }
