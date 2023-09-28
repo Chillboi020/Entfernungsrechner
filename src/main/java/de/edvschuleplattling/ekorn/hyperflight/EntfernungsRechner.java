@@ -38,9 +38,7 @@ public class EntfernungsRechner {
             cities = new String[list.size()];
             for (int i = 0; i < cities.length; i++) {
                 cities[i] = list.get(i);
-                // System.out.print(cities[i] + ", ");
             }
-            // System.out.println(" ");
 
             distances = new int[cities.length][cities.length];
 
@@ -49,9 +47,7 @@ public class EntfernungsRechner {
                 String[] spalten = zeile.split(";");
                 for (int s = 1; s < spalten.length; s++) {
                     distances[z][s - 1] = Integer.parseInt(spalten[s]);
-                    // System.out.print(distances[z][s - 1]+ ",");
                 }
-                // System.out.println(" ");
             }
         }
         catch (Throwable e) {
