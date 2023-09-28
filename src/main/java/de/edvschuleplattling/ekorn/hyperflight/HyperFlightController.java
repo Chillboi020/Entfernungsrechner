@@ -35,6 +35,7 @@ public class HyperFlightController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         refresh();
+        er.calculateAll();
     }
 
     // Die Berechnung der Entfernung
@@ -42,46 +43,16 @@ public class HyperFlightController implements Initializable {
     public void onCalculateClick(ActionEvent actionEvent) {
         String start = cbStartStation.getValue();
         String end = cbEndStation.getValue();
-        // boolean startCheck = EntfernungsRechner.cityExist(start);
-        // boolean endCheck = EntfernungsRechner.cityExist(end);
-        boolean calcCheck = false;
-
-        // Fehlermeldungen
-        // Falls eine Choicebox leer it oder wenn beide gleich sind
-        if (Objects.equals(start, end)) {
-            lblOutput.setText("Bahnhöfe sind gleich!");
-        } else {
-            calcCheck = true;
-        }
-        /* } else {
-            // // Falls eingegebene Bahnhöfe nicht existieren
-            //if (!startCheck && !endCheck) {
-                // // System.out.println("Both Not Exist");
-                // lblOutput.setText("Die Bahnhöfe existieren nicht!");
-            //} else if (!startCheck) {
-                // // System.out.println("Start Not Exist");
-                // lblOutput.setText("Startbahnhof existiert nicht!");
-            // } else if (!endCheck) {
-                // // System.out.println("End Not Exist");
-                // lblOutput.setText("Zielbahnhof existiert nicht!");
-            // } else {
-                // // wenn keine Fehler vorkommen
-                // calcCheck = true;
-            // }
-        // }
-        */
 
         // Die Entfernungsberechnung
-        if (calcCheck) {
-            int distance = er.getDistance(start, end);
-            if (distance == 0) {
-                // System.out.println("No Connection");
-                lblOutput.setText("Es gibt keine Verbindung!");
-            } else {
-                // System.out.println("Success");
-                lblOutput.setText(start + " --> " + end + ": " + distance + "km");
-                lstHistory.getItems().add(lblOutput.getText());
-            }
+        int distance = er.getDistance(start, end);
+        if (distance == 0) {
+            lblOutput.setText("Gleicher Bahnhof!");
+        } else if (distance == -1) {
+            lblOutput.setText("Keine Verbindung!");
+        } else {
+            lblOutput.setText(start + " --> " + end + ": " + distance + "km");
+            lstHistory.getItems().add(lblOutput.getText());
         }
     }
 

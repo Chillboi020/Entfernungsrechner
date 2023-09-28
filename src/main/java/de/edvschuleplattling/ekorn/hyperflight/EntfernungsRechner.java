@@ -10,6 +10,8 @@ public class EntfernungsRechner {
 
     public String[] cities;
     public int[][] distances;
+    private int[][] predecessor;
+    private int[][] shortestDistances;
     private String path;
 
     public EntfernungsRechner(String path) {
@@ -66,5 +68,53 @@ public class EntfernungsRechner {
             }
         }
         return check;
+    }
+
+    public void calculateShortestPaths() {
+        if (distances == null) return;
+
+        int i, j, k, v = distances.length;
+
+        for (i = 0; i < v; i++) {
+            for (j = 0; j < v; j++) {
+                if (distances[i][j] != Integer.MAX_VALUE && distances[i][j] != 0) {
+                    predecessor[i][j] = i;
+                } else {
+                    predecessor[i][j] = -1;
+                }
+            }
+        }
+
+        for (i = 0; i < v; i++) {
+            for (j = 0; j < v; j++) {
+                if (distances[i][j] == -1) {
+                    shortestDistances[i][j] = Integer.MAX_VALUE;
+                } else {
+                    shortestDistances[i][j] = distances[i][j];
+                }
+            }
+        } // TODO
+
+        for (k = 0; k < v; k++) {
+            for (i = 0; i < v; i++) {
+                for (j = 0; j < v; j++) {
+                    if (distances[i][k] + distances[k][j] < distances[i][j]) {
+                        distances[i][j] = distances[i][k] + distances[k][j];
+                    }
+                }
+            }
+        }
+        System.out.println(Integer.MAX_VALUE);
+        System.out.println("Die Entfernungen");
+        for (i = 0; i < v; i++) {
+            for (j = 0; j < v; j++) {
+                if (distances[i][j] == inf) {
+                    System.out.print("INF ");
+                } else {
+                    System.out.print(distances[i][j] + "   ");
+                }
+            }
+            System.out.println();
+        }
     }
 }
